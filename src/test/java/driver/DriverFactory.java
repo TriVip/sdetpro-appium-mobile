@@ -18,12 +18,9 @@ public class DriverFactory {
         desiredCapabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.wdiodemoapp.MainActivity");
         URL appiumServer = null;
         try {
-            appiumServer = new URL("http://localhost:4723");
+            appiumServer = new URL("http://localhost:4725");
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (appiumServer == null) {
-            throw new RuntimeException("Can't construct the appium server URL");
         }
 
         switch (platform) {
@@ -33,6 +30,9 @@ public class DriverFactory {
             case IOS:
                 appiumDriver = new IOSDriver(appiumServer, desiredCapabilities);
                 break;
+        }
+        if (appiumServer == null) {
+            throw new RuntimeException("Can't construct the appium server URL");
         }
 
         // Need one more thing here that we will talk in next lesson
