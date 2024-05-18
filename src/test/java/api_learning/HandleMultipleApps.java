@@ -12,64 +12,66 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 public class HandleMultipleApps {
 
-    public static void main(String[] args) {
-        AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
-        try {
+  public static void main(String[] args) {
+    AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
+    try {
 
-            // Login Action
-            By navloginBtnLoc = AppiumBy.accessibilityId("Login");
-            WebElement navLoginBtnEle = appiumDriver.findElement(navloginBtnLoc);
-            navLoginBtnEle.click();
+      // Login Action
+      By navloginBtnLoc = AppiumBy.accessibilityId("Login");
+      WebElement navLoginBtnEle = appiumDriver.findElement(navloginBtnLoc);
+      navLoginBtnEle.click();
 
-            // Input username
-            By emailFieldLoc = AppiumBy.accessibilityId("input-email");
-            WebElement emailFieldEle = appiumDriver.findElement(emailFieldLoc);
-            emailFieldEle.sendKeys("teo@sth.com");
+      // Input username
+      By emailFieldLoc = AppiumBy.accessibilityId("input-email");
+      WebElement emailFieldEle = appiumDriver.findElement(emailFieldLoc);
+      emailFieldEle.sendKeys("teo@sth.com");
 
-            // Input password
-            By passwordLoc = AppiumBy.accessibilityId("input-password");
-            WebElement passwordEle = appiumDriver.findElement(passwordLoc);
-            passwordEle.sendKeys("12345678");
+      // Input password
+      By passwordLoc = AppiumBy.accessibilityId("input-password");
+      WebElement passwordEle = appiumDriver.findElement(passwordLoc);
+      passwordEle.sendKeys("12345678");
 
-            // Click on Login Btn
-            By loginBtnLoc = AppiumBy.accessibilityId("button-LOGIN");
-            WebElement loginBtnEle = appiumDriver.findElement(loginBtnLoc);
-            loginBtnEle.click();
+      // Click on Login Btn
+      By loginBtnLoc = AppiumBy.accessibilityId("button-LOGIN");
+      WebElement loginBtnEle = appiumDriver.findElement(loginBtnLoc);
+      loginBtnEle.click();
 
-            // SWITCH to another app | Handle multi app on same device
-            Capabilities caps = appiumDriver.getCapabilities();
-            String currentPlatform = CapabilityHelpers.getCapability(caps, "platformName", String.class);
-            if (Platform.valueOf(currentPlatform).equals(Platform.ANDROID)) {
-                AndroidDriver androidDriver = ((AndroidDriver) appiumDriver);
+      // SWITCH to another app | Handle multi app on same device
+      Capabilities caps = appiumDriver.getCapabilities();
+      String currentPlatform = CapabilityHelpers.getCapability(caps, "platformName", String.class);
+      if (Platform.valueOf(currentPlatform).equals(Platform.ANDROID)) {
+        AndroidDriver androidDriver = ((AndroidDriver) appiumDriver);
 
-                // put the current app under background till we call it back
-                androidDriver.runAppInBackground(Duration.ofSeconds(-1));
+        // put the current app under background till we call it back
+        androidDriver.runAppInBackground(Duration.ofSeconds(-1));
 
-                // Switch to the another app to do something
-                androidDriver.activateApp("com.android.settings");
+        // Switch to the another app to do something
+        androidDriver.activateApp("com.android.settings");
 
-                // Switch back to the app under test to continue the follow
-                androidDriver.activateApp("com.wdiodemoapp");
-            }
+        // Switch back to the app under test to continue the follow
+        androidDriver.activateApp("com.wdiodemoapp");
+      }
 
-            // Wait for the dialog displayed
-            By dialogMsgLoc = AppiumBy.id("android:id/message");
-            By dialogBtnLoc = AppiumBy.id("android:id/button1");
+      // Wait for the dialog displayed
+      By dialogMsgLoc = AppiumBy.id("android:id/message");
+      By dialogBtnLoc = AppiumBy.id("android:id/button1");
 
-            // Using explicit wait
-            WebDriverWait wait = new WebDriverWait(appiumDriver, Duration.ofSeconds(15));
-            WebElement dialogMsgEle = wait.until(ExpectedConditions.visibilityOfElementLocated(dialogMsgLoc));
-            System.out.printf("Dialog msg: %s\n", dialogMsgEle.getText());
-            appiumDriver.findElement(dialogBtnLoc).click();
+      // Using explicit wait
+      WebDriverWait wait = new WebDriverWait(appiumDriver, Duration.ofSeconds(15));
+      WebElement dialogMsgEle = wait.until(ExpectedConditions.visibilityOfElementLocated(dialogMsgLoc));
+      System.out.printf("Dialog msg: %s\n", dialogMsgEle.getText());
+      appiumDriver.findElement(dialogBtnLoc).click();
 
-            // DEBUG PURPOSE ONLY
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        appiumDriver.quit();
+      // DEBUG PURPOSE ONLY
+      Thread.sleep(1000);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+
+    appiumDriver.quit();
+  }
+
 }

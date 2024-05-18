@@ -21,98 +21,100 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HandleHybridContext {
-    public static void main(String[] args) {
-        AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
 
-        try {
-            // Click on the Webview button
-            By formsBtnLoc = AppiumBy.accessibilityId("Webview");
-            // Navigate to [Webview] screen
-            appiumDriver.findElement(formsBtnLoc).click();
+  public static void main(String[] args) {
+    AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
 
-            // Get platform info under test session
-            Capabilities caps = appiumDriver.getCapabilities();
-            String currentPlatform = CapabilityHelpers.getCapability(caps, "platformName", String.class);
+    try {
+      // Click on the Webview button
+      By formsBtnLoc = AppiumBy.accessibilityId("Webview");
+      // Navigate to [Webview] screen
+      appiumDriver.findElement(formsBtnLoc).click();
 
-            // Custom Explicit wait
-            WebDriverWait wait = new WebDriverWait(appiumDriver, Duration.ofSeconds(15L));
-            wait.until(new WaitMoreThanOneContext(appiumDriver));
+      // Get platform info under test session
+      Capabilities caps = appiumDriver.getCapabilities();
+      String currentPlatform = CapabilityHelpers.getCapability(caps, "platformName", String.class);
 
-            if (Platform.valueOf(currentPlatform).equals(Platform.ANDROID)) {
-                AndroidDriver androidDriver = ((AndroidDriver) appiumDriver);
-                System.out.println(androidDriver.getContextHandles());
+      // Custom Explicit wait
+      WebDriverWait wait = new WebDriverWait(appiumDriver, Duration.ofSeconds(15L));
+      wait.until(new WaitMoreThanOneContext(appiumDriver));
 
-                // SWITCH to the WEBVIEW CONTEXT
-                androidDriver.context(Contexts.WEB_VIEW);
+      if (Platform.valueOf(currentPlatform).equals(Platform.ANDROID)) {
+        AndroidDriver androidDriver = ((AndroidDriver) appiumDriver);
+        System.out.println(androidDriver.getContextHandles());
 
-                // Interact with Webview
-                WebElement navToggleBtnEle = androidDriver.findElement(
-                        By.cssSelector("button[class*='navbar__toggle']"));
-                navToggleBtnEle.click();
+        // SWITCH to the WEBVIEW CONTEXT
+        androidDriver.context(Contexts.WEB_VIEW);
 
-                // Get all menu item elements
-                List<WebElement> menuItemElems = androidDriver.findElements(
-                        By.cssSelector(".menu__list li a"));
-                // TODO: need to check the element list is not empty before looping for verifying
-                if (menuItemElems.isEmpty()) {
-                    throw new RuntimeException("The menuItemElems is empty");
-                }
+        // Interact with Webview
+        WebElement navToggleBtnEle = androidDriver.findElement(
+            By.cssSelector("button[class*='navbar__toggle']"));
+        navToggleBtnEle.click();
 
-                List<MenuItemData> currentNavItemData = new ArrayList<>();
-                for (WebElement menuItemElem : menuItemElems) {
-                    String itemText = menuItemElem.getText();
-                    if (itemText.isEmpty()) {
-                        itemText = menuItemElem.getAttribute("aria-label");
-                    }
-                    String itemHref = menuItemElem.getAttribute("href");
-                    currentNavItemData.add(new MenuItemData(itemText, itemHref));
-                }
-
-                // Verification
-                System.out.println(currentNavItemData);
-
-                // SWITCH back to the native context for native elements
-                androidDriver.context(Contexts.NATIVE);
-                androidDriver.findElement(AppiumBy.accessibilityId("Forms")).click();
-
-            } else {
-                System.out.println(((IOSDriver) appiumDriver).getContextHandles());
-            }
-
-            // DEBUG PURPOSE ONLY
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Get all menu item elements
+        List<WebElement> menuItemElems = androidDriver.findElements(
+            By.cssSelector(".menu__list li a"));
+        // TODO: need to check the element list is not empty before looping for verifying
+        if (menuItemElems.isEmpty()) {
+          throw new RuntimeException("The menuItemElems is empty");
         }
 
-        appiumDriver.quit();
+        List<MenuItemData> currentNavItemData = new ArrayList<>();
+        for (WebElement menuItemElem : menuItemElems) {
+          String itemText = menuItemElem.getText();
+          if (itemText.isEmpty()) {
+            itemText = menuItemElem.getAttribute("aria-label");
+          }
+          String itemHref = menuItemElem.getAttribute("href");
+          currentNavItemData.add(new MenuItemData(itemText, itemHref));
+        }
+
+        // Verification
+        System.out.println(currentNavItemData);
+
+        // SWITCH back to the native context for native elements
+        androidDriver.context(Contexts.NATIVE);
+        androidDriver.findElement(AppiumBy.accessibilityId("Forms")).click();
+
+      } else {
+        System.out.println(((IOSDriver) appiumDriver).getContextHandles());
+      }
+
+      // DEBUG PURPOSE ONLY
+      Thread.sleep(1000);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    // TODO: good to explore - Lombook
-    public static class MenuItemData {
+    appiumDriver.quit();
+  }
 
-        private String name;
-        private String href;
+  // TODO: good to explore - Lombook
+  public static class MenuItemData {
 
-        public MenuItemData(String name, String href) {
-            this.name = name;
-            this.href = href;
-        }
+    private String name;
+    private String href;
 
-        public String getName() {
-            return name;
-        }
-
-        public String getHref() {
-            return href;
-        }
-
-        @Override
-        public String toString() {
-            return "MenuItemData{" +
-                    "name='" + name + '\'' +
-                    ", href='" + href + '\'' +
-                    '}';
-        }
+    public MenuItemData(String name, String href) {
+      this.name = name;
+      this.href = href;
     }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getHref() {
+      return href;
+    }
+
+    @Override
+    public String toString() {
+      return "MenuItemData{" +
+          "name='" + name + '\'' +
+          ", href='" + href + '\'' +
+          '}';
+    }
+  }
+
 }

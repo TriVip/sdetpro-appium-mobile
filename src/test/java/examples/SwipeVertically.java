@@ -1,4 +1,4 @@
-package api_learning;
+package examples;
 
 import driver.DriverFactory;
 import driver.Platform;
@@ -21,15 +21,14 @@ public class SwipeVertically {
   public static void main(String[] args) {
     AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
     try {
-      By formsBtnLoc = AppiumBy.accessibilityId("Forms");
-      By activeBtnLoc = AppiumBy.accessibilityId("button-Active");
-
-      // Navigate to [Forms] screen
+      By formsBtnLoc = AppiumBy.accessibilityId("Swipe");
+      // Navigate to [Swipe] screen
       appiumDriver.findElement(formsBtnLoc).click();
 
-      // Make sure we are on the target screen before swiping up/down/left/right/any direction
+      // Make sure we are on the target screen
       WebDriverWait wait = new WebDriverWait(appiumDriver, Duration.ofSeconds(15L));
-      wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.androidUIAutomator("new UiSelector(). textContains(\"Form components\")")));
+      wait.until(ExpectedConditions.visibilityOfElementLocated(
+          AppiumBy.androidUIAutomator("new UiSelector(). textContains(\"Swipe horizontal\")")));
 
       // Swipe up before interacting
       Dimension windowSize = appiumDriver.manage().window().getSize();
@@ -44,21 +43,25 @@ public class SwipeVertically {
       int endY = 10 * screenHeight / 100;
 
       // Specify PointerInput as [TOUCH] with name [finger1]
-      PointerInput pointerInput = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
+      PointerInput pointerInput = new PointerInput(Kind.TOUCH, "finger1");
 
+      System.out.println(
+          isTheTargetFound(appiumDriver, AppiumBy.accessibilityId("WebdriverIO logo")));
       // Specify sequence
-      Sequence sequence = new Sequence(pointerInput, 1)
-          .addAction(pointerInput.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY))
-          .addAction(pointerInput.createPointerDown(MouseButton.LEFT.asArg()))
-          .addAction(new Pause(pointerInput, Duration.ofMillis(250)))
-          .addAction(pointerInput.createPointerMove(Duration.ofMillis(250), PointerInput.Origin.viewport(), endX, endY))
-          .addAction(pointerInput.createPointerUp(MouseButton.LEFT.asArg()));
+      for (int i = 0; i < 2; i++) {
+        Sequence sequence = new Sequence(pointerInput, 1)
+            .addAction(pointerInput.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY))
+            .addAction(pointerInput.createPointerDown(MouseButton.LEFT.asArg()))
+            .addAction(new Pause(pointerInput, Duration.ofMillis(250)))
+            .addAction(pointerInput.createPointerMove(Duration.ofMillis(250), PointerInput.Origin.viewport(), endX, endY))
+            .addAction(pointerInput.createPointerUp(MouseButton.LEFT.asArg()));
 
-      // Ask appium server to perform the sequence
-      appiumDriver.perform(Collections.singletonList(sequence));
+        // Ask appium server to perform the sequence
+        appiumDriver.perform(Collections.singletonList(sequence));
+      }
+      System.out.println(
+          isTheTargetFound(appiumDriver, AppiumBy.accessibilityId("WebdriverIO logo")));
 
-      // Interact with element on the screen
-      appiumDriver.findElement(activeBtnLoc).click();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -78,5 +81,9 @@ public class SwipeVertically {
    * Element | WebElement
    *
    * */
+
+  private static boolean isTheTargetFound(AppiumDriver appiumDriver, By locator){
+    return !appiumDriver.findElements(locator).isEmpty();
+  }
 
 }

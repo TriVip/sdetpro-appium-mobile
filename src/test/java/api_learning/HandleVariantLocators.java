@@ -8,42 +8,46 @@ import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import utils.ElementHandler;
+
 public class HandleVariantLocators {
-    private static Map<Platform, By> navloginBtnLocMap = Map.of(
-            Platform.ANDROID, AppiumBy.accessibilityId("Login"),
-            Platform.IOS, AppiumBy.accessibilityId("try-to-have-difference-here")
-    );
-    private static By emailFieldLoc = AppiumBy.accessibilityId("input-email");
-    private static By passwordLoc = AppiumBy.accessibilityId("input-password");
-    private static By loginBtnLoc = AppiumBy.accessibilityId("button-LOGIN");
 
-    public static void main(String[] args) {
+  private static Map<Platform, By> navloginBtnLocMap = Map.of(
+      Platform.ANDROID, AppiumBy.accessibilityId("Login"),
+      Platform.IOS, AppiumBy.accessibilityId("try-to-have-difference-here")
+  );
+  private static By emailFieldLoc = AppiumBy.accessibilityId("input-email");
+  private static By passwordLoc = AppiumBy.accessibilityId("input-password");
+  private static By loginBtnLoc = AppiumBy.accessibilityId("button-LOGIN");
 
-        AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
+  public static void main(String[] args) {
 
-        try {
-            ElementHandler elementHandler = new ElementHandler(appiumDriver);
-            WebElement navLoginBtnEle = elementHandler.findElement(navloginBtnLocMap);
-            navLoginBtnEle.click();
+    AppiumDriver appiumDriver = DriverFactory.getDriver(Platform.ANDROID);
 
-            WebElement emailFieldEle = appiumDriver.findElement(emailFieldLoc);
-            emailFieldEle.clear();
-            emailFieldEle.sendKeys("teo@sth.com");
+    try {
+      ElementHandler elementHandler = new ElementHandler(appiumDriver);
+      WebElement navLoginBtnEle = elementHandler.findElement(navloginBtnLocMap);
+      navLoginBtnEle.click();
 
-            // Input password
-            WebElement passwordEle = appiumDriver.findElement(passwordLoc);
-            passwordEle.sendKeys("12345678");
+      WebElement emailFieldEle = appiumDriver.findElement(emailFieldLoc);
+      emailFieldEle.clear();
+      emailFieldEle.sendKeys("teo@sth.com");
 
-            // Click on Login Btn
-            WebElement loginBtnEle = appiumDriver.findElement(loginBtnLoc);
-            loginBtnEle.click();
+      // Input password
+      WebElement passwordEle = appiumDriver.findElement(passwordLoc);
+      passwordEle.sendKeys("12345678");
 
-            // Debug purpose only
-            Thread.sleep(2000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+      // Click on Login Btn
+      WebElement loginBtnEle = appiumDriver.findElement(loginBtnLoc);
+      loginBtnEle.click();
 
-        appiumDriver.quit();
+      // Debug purpose only
+      Thread.sleep(2000);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+
+    appiumDriver.quit();
+  }
+
 }
+

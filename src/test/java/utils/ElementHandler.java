@@ -8,25 +8,31 @@ import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebElement;
+
 public class ElementHandler {
-    private final AppiumDriver appiumDriver;
 
-    public ElementHandler(AppiumDriver appiumDriver) {
-        this.appiumDriver = appiumDriver;
-    }
+  private final AppiumDriver appiumDriver;
 
-    public WebElement findElement(Map<Platform, By> locatorMap) {
-        By elementLocator = locatorMap.get(Platform.valueOf(getCurrentPlatform()));
-        return this.appiumDriver.findElement(elementLocator);
-    }
+  public ElementHandler(AppiumDriver appiumDriver) {
+    this.appiumDriver = appiumDriver;
+  }
 
-    public List<WebElement> findElements(Map<Platform, By> locatorMap) {
-        By elementLocator = locatorMap.get(Platform.valueOf(getCurrentPlatform()));
-        return this.appiumDriver.findElements(elementLocator);
-    }
+  public By getElementLocatorFrom(Map<Platform, By> locatorMap){
+    return locatorMap.get(Platform.valueOf(getCurrentPlatform()));
+  }
 
-    private String getCurrentPlatform() {
-        Capabilities caps = this.appiumDriver.getCapabilities();
-        return CapabilityHelpers.getCapability(caps, "platformName", String.class);
-    }
+  public WebElement findElement(Map<Platform, By> locatorMap) {
+    By elementLocator = locatorMap.get(Platform.valueOf(getCurrentPlatform()));
+    return this.appiumDriver.findElement(elementLocator);
+  }
+
+  public List<WebElement> findElements(Map<Platform, By> locatorMap) {
+    By elementLocator = locatorMap.get(Platform.valueOf(getCurrentPlatform()));
+    return this.appiumDriver.findElements(elementLocator);
+  }
+
+  private String getCurrentPlatform() {
+    Capabilities caps = this.appiumDriver.getCapabilities();
+    return CapabilityHelpers.getCapability(caps, "platformName", String.class);
+  }
 }
