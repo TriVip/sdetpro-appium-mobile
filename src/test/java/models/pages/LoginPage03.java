@@ -2,7 +2,6 @@ package models.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-import models.components.NavComponent;
 import org.openqa.selenium.By;
 
 // INTRODUCING MAIN INTERACTION METHODS

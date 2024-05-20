@@ -2,7 +2,7 @@ package models.pages;
 
 import io.appium.java_client.AppiumDriver;
 import models.components.Component;
-import models.components.NavComponent;
+import models.components.global.NavComponent;
 import org.openqa.selenium.By;
 
 public class BasePage extends Component {

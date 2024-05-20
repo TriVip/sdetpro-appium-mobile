@@ -86,6 +86,9 @@ public class Component {
     } else if (componentClass.isAnnotationPresent(ComponentAccessibilityIdSelector.class)) {
       return AppiumBy.accessibilityId(
           componentClass.getAnnotation(ComponentAccessibilityIdSelector.class).value());
+    } else if (componentClass.isAnnotationPresent(ComponentIdSelector.class)) {
+      return AppiumBy.id(
+          componentClass.getAnnotation(ComponentIdSelector.class).value());
     } else {
       throw new IllegalArgumentException(
           "Component class " + componentClass + " must have annotation"

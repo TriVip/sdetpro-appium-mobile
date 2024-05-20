@@ -2,6 +2,7 @@ package models.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import models.components.login.LoginDialog;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -37,6 +38,11 @@ public class LoginPage extends BasePage {
 
   public String getInvalidPasswordStr() {
     return component.findElement(invalidPasswordTxtSel).getText();
+  }
+
+
+  public LoginDialog loginDialog() {
+    return new LoginDialog(appiumDriver);
   }
 
 }

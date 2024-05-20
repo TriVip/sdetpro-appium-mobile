@@ -1,19 +1,28 @@
 package test_flows.authentication;
 
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import java.time.Duration;
 import models.pages.LoginPage;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import test_flows.BaseFlow;
 
 public class LoginFlow extends BaseFlow {
 
   private String username;
   private String password;
+  private LoginPage loginPage;
 
   public LoginFlow(AppiumDriver appiumDriver, String username, String password) {
     super(appiumDriver);
     this.username = username;
     this.password = password;
+    loginPage = new LoginPage(appiumDriver);
   }
 
   public void setUsername(String username) {
@@ -25,7 +34,6 @@ public class LoginFlow extends BaseFlow {
   }
 
   public void login() {
-    LoginPage loginPage = new LoginPage(appiumDriver);
     if (!username.isEmpty()) {
       loginPage.username().clear();
       loginPage.username().sendKeys(username);
@@ -56,13 +64,14 @@ public class LoginFlow extends BaseFlow {
 
   }
 
-  // TODO: Implement this | reuse the dialog in the prev lessons
   private void verifyCorrectLoginCreds() {
+    String expectedSuccessMsg = "You are logged in!";
+    String actualSuccessMsg = loginPage.loginDialog().getDialogMsg();
+    Assert.assertEquals(expectedSuccessMsg, actualSuccessMsg, "[ERR] Wrong success login msg");
   }
 
   private void verifyIncorrectEmailLogin() {
     String expectedInvalidEmailStr = "Please enter a valid email address";
-    LoginPage loginPage = new LoginPage(appiumDriver);
     String actualInvalidEmailStr = loginPage.getInvalidEmailStr();
     if (!actualInvalidEmailStr.equalsIgnoreCase(expectedInvalidEmailStr)) {
       throw new RuntimeException("[ERR] Invalid email string incorrect!");
@@ -71,7 +80,6 @@ public class LoginFlow extends BaseFlow {
 
   private void verifyIncorrectPassword() {
     String expectedInvalidPasswordStr = "Please enter at least 8 characters";
-    LoginPage loginPage = new LoginPage(appiumDriver);
     String actualInvalidPasswordStr = loginPage.getInvalidPasswordStr();
     if (!actualInvalidPasswordStr.equalsIgnoreCase(expectedInvalidPasswordStr)) {
       throw new RuntimeException("[ERR] Invalid password string incorrect!");
